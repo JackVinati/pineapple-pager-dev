@@ -1,0 +1,246 @@
+{
+  "Payload Header": {
+    "prefix": "payload-header",
+    "body": [
+      "#!/bin/bash",
+      "# Title: ${1:Payload Name}",
+      "# Author: ${2:Author}",
+      "# Description: ${3:Brief description}",
+      "# Version: ${4:1.0}",
+      "# Category: ${5|general,reconnaissance,exfiltration,interception,remote_access|}",
+      "",
+      "LOOT_DIR=\"/root/loot/${6:payload_name}\"",
+      "RUNNING=1",
+      "",
+      "mkdir -p \"\\${LOOT_DIR}\"",
+      "",
+      "cleanup() {",
+      "    RUNNING=0",
+      "    rm -f /tmp/${6}_*.tmp",
+      "    LOG green \"=== ${1} STOPPED ===\"",
+      "    exit 0",
+      "}",
+      "",
+      "trap cleanup INT TERM HUP QUIT",
+      "",
+      "$0"
+    ],
+    "description": "Full Pager payload boilerplate with signal handling"
+  },
+  "LOG": {
+    "prefix": "log",
+    "body": "LOG ${1|green,red,cyan,yellow,magenta,blue,white|} \"${2:message}\"",
+    "description": "LOG [color] \"message\" — send to payload console"
+  },
+  "LOG plain": {
+    "prefix": "logp",
+    "body": "LOG \"${1:message}\"",
+    "description": "LOG \"message\" — no color"
+  },
+  "Confirmation Dialog": {
+    "prefix": "confirm",
+    "body": "CONFIRMATION_DIALOG \"${1:Continue?}\" || exit 0",
+    "description": "CONFIRMATION_DIALOG \"prompt\" — returns 1 (yes) or 0 (no)"
+  },
+  "Confirmation Dialog Full": {
+    "prefix": "confirm-full",
+    "body": [
+      "resp=$(CONFIRMATION_DIALOG \"${1:Continue?}\")",
+      "case \\$? in",
+      "    \\$DUCKYSCRIPT_REJECTED|\\$DUCKYSCRIPT_CANCELLED)",
+      "        LOG \"Cancelled\"",
+      "        exit 0",
+      "        ;;",
+      "    \\$DUCKYSCRIPT_ERROR)",
+      "        LOG red \"Dialog error\"",
+      "        exit 1",
+      "        ;;",
+      "esac",
+      "if [ \"\\$resp\" != \"\\$DUCKYSCRIPT_USER_CONFIRMED\" ]; then",
+      "    LOG \"User declined\"",
+      "    exit 0",
+      "fi"
+    ],
+    "description": "CONFIRMATION_DIALOG with full exit-code + return-value handling"
+  },
+  "Text Picker": {
+    "prefix": "textpicker",
+    "body": "${1:RESULT}=$(TEXT_PICKER \"${2:Enter value}\" \"${3:default}\") || exit 0",
+    "description": "TEXT_PICKER \"prompt\" \"default\" — free text input"
+  },
+  "IP Picker": {
+    "prefix": "ippicker",
+    "body": "${1:TARGET_IP}=$(IP_PICKER \"${2:Enter target IP}\" \"${3:192.168.1.1}\") || exit 0",
+    "description": "IP_PICKER \"prompt\" \"default_ip\" — IPv4 input"
+  },
+  "MAC Picker": {
+    "prefix": "macpicker",
+    "body": "${1:TARGET_MAC}=$(MAC_PICKER \"${2:Target MAC}\" \"${3:DE:AD:BE:EF:CA:FE}\") || exit 0",
+    "description": "MAC_PICKER \"prompt\" \"default_mac\" — MAC address input"
+  },
+  "Number Picker": {
+    "prefix": "numpicker",
+    "body": "${1:VALUE}=$(NUMBER_PICKER \"${2:Enter number}\" \"${3:0}\") || exit 0",
+    "description": "NUMBER_PICKER \"prompt\" \"default\" — numeric input"
+  },
+  "Alert": {
+    "prefix": "alert",
+    "body": "ALERT \"${1:message}\"",
+    "description": "ALERT \"message\" — non-blocking full-screen alert"
+  },
+  "Error Dialog": {
+    "prefix": "errordialog",
+    "body": "ERROR_DIALOG \"${1:error message}\"",
+    "description": "ERROR_DIALOG \"message\" — blocking error notification"
+  },
+  "Prompt": {
+    "prefix": "prompt",
+    "body": "PROMPT \"${1:Press continue}\"",
+    "description": "PROMPT \"message\" — blocks until user acknowledges"
+  },
+  "Start Spinner": {
+    "prefix": "spinner",
+    "body": [
+      "__spinnerid=$(START_SPINNER \"${1:Working...}\")",
+      "${0}",
+      "STOP_SPINNER \\${__spinnerid}"
+    ],
+    "description": "START_SPINNER / STOP_SPINNER pair"
+  },
+  "Vibrate": {
+    "prefix": "vibrate",
+    "body": "VIBRATE ${1|short,long|}",
+    "description": "VIBRATE [short|long] — haptic feedback"
+  },
+  "Ringtone": {
+    "prefix": "ringtone",
+    "body": "RINGTONE \"${1:notification}\"",
+    "description": "RINGTONE \"name_or_rtttl\" — play a sound"
+  },
+  "LED": {
+    "prefix": "led",
+    "body": "LED ${1|SETUP,ATTACK,FINISH,FAIL,OFF,CLEANUP|}",
+    "description": "LED state — set device LED pattern"
+  },
+  "Wait For Button Press": {
+    "prefix": "waitbutton",
+    "body": "WAIT_FOR_BUTTON_PRESS ${1|UP,DOWN,LEFT,RIGHT,A,B,BACK|}",
+    "description": "WAIT_FOR_BUTTON_PRESS [button] — wait for specific button"
+  },
+  "Wait For Input": {
+    "prefix": "waitinput",
+    "body": [
+      "resp=$(WAIT_FOR_INPUT)",
+      "LOG \"User pressed: \\$resp\""
+    ],
+    "description": "WAIT_FOR_INPUT — wait for any button, returns button name"
+  },
+  "Payload Get Config": {
+    "prefix": "getconfig",
+    "body": "${1:value}=$(PAYLOAD_GET_CONFIG ${2:payload_name} ${3:option})",
+    "description": "PAYLOAD_GET_CONFIG payload_name option — read config"
+  },
+  "Payload Set Config": {
+    "prefix": "setconfig",
+    "body": "PAYLOAD_SET_CONFIG ${1:payload_name} ${2:option} \"${3:value}\"",
+    "description": "PAYLOAD_SET_CONFIG payload_name option value — write config"
+  },
+  "Payload Del Config": {
+    "prefix": "delconfig",
+    "body": "PAYLOAD_DEL_CONFIG ${1:payload_name} ${2:option}",
+    "description": "PAYLOAD_DEL_CONFIG payload_name option — delete config"
+  },
+  "Battery Check": {
+    "prefix": "battery",
+    "body": [
+      "batt=$(BATTERY_PERCENT)",
+      "charging=$(BATTERY_CHARGING)",
+      "LOG \"Battery: \\${batt}% (charging: \\${charging})\""
+    ],
+    "description": "Check battery percent and charging state"
+  },
+  "Trap Cleanup": {
+    "prefix": "trap-cleanup",
+    "body": [
+      "RUNNING=1",
+      "",
+      "cleanup() {",
+      "    RUNNING=0",
+      "    ${1:# cleanup code}",
+      "    LOG green \"=== STOPPED ===\"",
+      "    exit 0",
+      "}",
+      "",
+      "trap cleanup INT TERM HUP QUIT"
+    ],
+    "description": "Interrupt trap with cleanup function"
+  },
+  "Main Loop": {
+    "prefix": "mainloop",
+    "body": [
+      "while [ \\${RUNNING} -eq 1 ]; do",
+      "    ${0}",
+      "    [ \\${RUNNING} -eq 0 ] && break",
+      "    sleep ${1:1}",
+      "done"
+    ],
+    "description": "Interruptible main loop"
+  },
+  "WiFi Scan": {
+    "prefix": "wifiscan",
+    "body": [
+      "# WiFi scan using iw",
+      "for phy in /sys/class/ieee80211/phy*; do",
+      "    PHY_NAME=$(basename \"\\$phy\")",
+      "    iw phy \"\\${PHY_NAME}\" info 2>/dev/null",
+      "done"
+    ],
+    "description": "Enumerate WiFi radios with iw"
+  },
+  "BT Scan": {
+    "prefix": "btscan",
+    "body": [
+      "# Bluetooth scan",
+      "hciconfig hci0 up 2>/dev/null",
+      "if [ \\$? -eq 0 ]; then",
+      "    LOG cyan \"Scanning BT...\"",
+      "    timeout ${1:10} hcitool scan 2>/dev/null | while read -r line; do",
+      "        LOG \"  \\$line\"",
+      "    done",
+      "fi"
+    ],
+    "description": "Classic Bluetooth device scan"
+  },
+  "BLE Scan": {
+    "prefix": "blescan",
+    "body": [
+      "# BLE scan",
+      "hciconfig hci0 up 2>/dev/null",
+      "if [ \\$? -eq 0 ]; then",
+      "    LOG cyan \"Scanning BLE...\"",
+      "    timeout ${1:10} hcitool lescan 2>/dev/null | while read -r line; do",
+      "        LOG \"  \\$line\"",
+      "    done",
+      "fi"
+    ],
+    "description": "Bluetooth Low Energy device scan"
+  },
+  "Loot Save": {
+    "prefix": "lootsave",
+    "body": [
+      "LOOT_FILE=\"\\${LOOT_DIR}/${1:result}_$(date +%Y%m%d_%H%M%S).${2|txt,json,csv|}\"",
+      "${3:echo \"data\"} > \"\\${LOOT_FILE}\"",
+      "LOG green \"Saved: \\${LOOT_FILE}\""
+    ],
+    "description": "Save output to loot directory"
+  },
+  "JSON Escape": {
+    "prefix": "jsonescape",
+    "body": [
+      "json_escape() {",
+      "    printf '%s' \"\\$1\" | sed 's/\\\\\\\\/\\\\\\\\\\\\\\\\/g; s/\"/\\\\\\\\\"/g; s/\\t/ /g' | tr '\\n' ' ' | sed 's/  */ /g; s/ *\\$//'",
+      "}"
+    ],
+    "description": "JSON string escape helper for BusyBox"
+  }
+}

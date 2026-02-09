@@ -1,0 +1,186 @@
+{
+  "name": "Pager Payload",
+  "scopeName": "source.pager-payload",
+  "fileTypes": ["payload.sh"],
+  "patterns": [
+    { "include": "#duckyscript-commands" },
+    { "include": "#pager-api" },
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#variables" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#operators" },
+    { "include": "#functions" },
+    { "include": "#builtins" }
+  ],
+  "repository": {
+    "duckyscript-commands": {
+      "patterns": [
+        {
+          "comment": "Pager UI DuckyScript commands (dialogs, pickers, spinners, etc.)",
+          "name": "keyword.control.duckyscript.pager",
+          "match": "\\b(LOG|PROMPT|ALERT|ERROR_DIALOG|CONFIRMATION_DIALOG|TEXT_PICKER|IP_PICKER|MAC_PICKER|NUMBER_PICKER|START_SPINNER|STOP_SPINNER|VIBRATE|RINGTONE|LED|DPADLED|DPADLED_CONFIG|WAIT_FOR_BUTTON_PRESS|WAIT_FOR_INPUT|ENABLE_DISPLAY|DISABLE_DISPLAY|BATTERY_PERCENT|BATTERY_CHARGING)\\b"
+        },
+        {
+          "comment": "Payload config commands",
+          "name": "keyword.control.duckyscript.config",
+          "match": "\\b(PAYLOAD_GET_CONFIG|PAYLOAD_SET_CONFIG|PAYLOAD_DEL_CONFIG)\\b"
+        },
+        {
+          "comment": "Pineapple AP, recon, and filter commands",
+          "name": "keyword.control.duckyscript.pineapple",
+          "match": "\\b(PINEAPPLE_SSID_POOL_ADD|PINEAPPLE_SSID_POOL_ADD_FILE|PINEAPPLE_SSID_POOL_CLEAR|PINEAPPLE_SSID_POOL_DELETE|PINEAPPLE_SSID_POOL_LIST|PINEAPPLE_SSID_POOL_START|PINEAPPLE_SSID_POOL_STOP|PINEAPPLE_SSID_POOL_COLLECT_START|PINEAPPLE_SSID_POOL_COLLECT_STOP|PINEAPPLE_DEAUTH_CLIENT|PINEAPPLE_DEVICE_FILTER_ADD|PINEAPPLE_DEVICE_FILTER_ADD_FILE|PINEAPPLE_DEVICE_FILTER_CLEAR|PINEAPPLE_DEVICE_FILTER_DEL|PINEAPPLE_DEVICE_FILTER_DELETE|PINEAPPLE_DEVICE_FILTER_LIST|PINEAPPLE_DEVICE_FILTER_MODE|PINEAPPLE_NETWORK_FILTER_ADD|PINEAPPLE_NETWORK_FILTER_ADD_FILE|PINEAPPLE_NETWORK_FILTER_CLEAR|PINEAPPLE_NETWORK_FILTER_DEL|PINEAPPLE_NETWORK_FILTER_DELETE|PINEAPPLE_NETWORK_FILTER_LIST|PINEAPPLE_NETWORK_FILTER_MODE|PINEAPPLE_EXAMINE_BSSID|PINEAPPLE_EXAMINE_CHANNEL|PINEAPPLE_EXAMINE_RESET|PINEAPPLE_HOPPING_START|PINEAPPLE_HOPPING_STOP|PINEAPPLE_LOOT_ARCHIVE|PINEAPPLE_MIMIC_ENABLE|PINEAPPLE_MIMIC_DISABLE|PINEAPPLE_RECON_NEW|PINEAPPLE_SET_BANDS|FIND_CLIENT_IP)\\b"
+        },
+        {
+          "comment": "WiFi, VPN, AutoSSH, DNS Spoof commands",
+          "name": "keyword.control.duckyscript.wifi",
+          "match": "\\b(WIFI_CONNECT|WIFI_DISCONNECT|WIFI_CLEAR|WIFI_WAIT|WIFI_OPEN_AP|WIFI_OPEN_AP_CLEAR|WIFI_OPEN_AP_DISABLE|WIFI_OPEN_AP_HIDE|WIFI_WPA_AP|WIFI_WPA_AP_CLEAR|WIFI_WPA_AP_DISABLE|WIFI_WPA_AP_HIDE|WIFI_MGMT_AP|WIFI_MGMT_AP_CLEAR|WIFI_MGMT_AP_DISABLE|WIFI_MGMT_AP_HIDE|WIFI_PCAP_START|WIFI_PCAP_STOP|OPENVPN_CONFIGURE|OPENVPN_ENABLE|OPENVPN_DISABLE|WIREGUARD_CONFIGURE|WIREGUARD_ENABLE|WIREGUARD_DISABLE|AUTOSSH_CONFIGURE|AUTOSSH_ENABLE|AUTOSSH_DISABLE|AUTOSSH_CLEAR|AUTOSSH_ADD_PORT|SSH_ADD_KNOWN_HOST|DNSSPOOF_ENABLE|DNSSPOOF_DISABLE|DNSSPOOF_ADD_HOST|DNSSPOOF_DEL_HOST|DNSSPOOF_CLEAR|SYSTEM_DNS)\\b"
+        },
+        {
+          "comment": "GPS and Wigle commands",
+          "name": "keyword.control.duckyscript.gps",
+          "match": "\\b(GPS_CONFIGURE|GPS_GET|GPS_LIST|WIGLE_LOGIN|WIGLE_LOGOUT|WIGLE_START|WIGLE_STOP|WIGLE_UPLOAD)\\b"
+        },
+        {
+          "comment": "System commands",
+          "name": "keyword.control.duckyscript.system",
+          "match": "\\b(SLA_ACCEPT|TOS_ACCEPT|INSTALL_FIRMWARE|PASSWORD|USB_STORAGE|USB_WAIT|USB_EJECT|DEVELOPER_THEME_RELOAD)\\b"
+        },
+        {
+          "comment": "LOG with color argument",
+          "name": "keyword.control.duckyscript.log-color",
+          "match": "\\b(LOG)\\s+(red|green|blue|cyan|yellow|magenta|purple|white)\\b",
+          "captures": {
+            "1": { "name": "keyword.control.duckyscript.pager" },
+            "2": { "name": "constant.language.color.pager" }
+          }
+        },
+        {
+          "comment": "DuckyScript constants",
+          "name": "constant.language.duckyscript.pager",
+          "match": "\\$DUCKYSCRIPT_(USER_CONFIRMED|USER_DENIED|CANCELLED|REJECTED|ERROR)\\b"
+        },
+        {
+          "comment": "LED named states",
+          "name": "constant.language.led.pager",
+          "match": "\\b(LED)\\s+(SETUP|ATTACK|FINISH|FAIL|OFF|CLEANUP)\\b",
+          "captures": {
+            "1": { "name": "keyword.control.duckyscript.pager" },
+            "2": { "name": "constant.language.led-state.pager" }
+          }
+        },
+        {
+          "comment": "Backward-compat aliases (old names, still work)",
+          "name": "keyword.control.duckyscript.compat",
+          "match": "\\b(TEXT_INPUT_DIALOG|IP_INPUT_DIALOG|SELECT_DIALOG)\\b"
+        }
+      ]
+    },
+    "pager-api": {
+      "patterns": [
+        {
+          "name": "support.function.pager-api",
+          "match": "\\b(hciconfig|hcitool|iw|iwinfo|airmon-ng|aireplay-ng|airodump-ng|tcpdump|nmap|arp-scan|uci|opkg|fw_printenv)\\b"
+        },
+        {
+          "name": "entity.name.function.pager-path",
+          "match": "/root/(payloads|loot|handshakes)/[a-zA-Z0-9_/.-]*"
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.pager",
+          "match": "#.*$",
+          "patterns": [
+            {
+              "name": "keyword.other.metadata.pager",
+              "match": "#\\s*(Title|Author|Description|Version|Category|Net Mode|LED State):"
+            }
+          ]
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.pager",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            { "name": "constant.character.escape.pager", "match": "\\\\." },
+            { "name": "variable.other.interpolated.pager", "match": "\\$\\{?[a-zA-Z_][a-zA-Z0-9_]*\\}?" },
+            { "name": "variable.other.interpolated.pager", "match": "\\$\\([^)]+\\)" }
+          ]
+        },
+        {
+          "name": "string.quoted.single.pager",
+          "begin": "'",
+          "end": "'"
+        },
+        {
+          "name": "string.interpolated.backtick.pager",
+          "begin": "`",
+          "end": "`"
+        }
+      ]
+    },
+    "variables": {
+      "patterns": [
+        { "name": "variable.other.special.pager", "match": "\\$\\{[^}]+\\}" },
+        { "name": "variable.other.positional.pager", "match": "\\$[0-9@#?!$*-]" },
+        { "name": "variable.other.readwrite.pager", "match": "\\$[a-zA-Z_][a-zA-Z0-9_]*" },
+        { "name": "variable.other.assignment.pager", "match": "\\b([A-Z_][A-Z0-9_]*)=" }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        { "name": "constant.numeric.hex.pager", "match": "\\b0[xX][0-9a-fA-F]+\\b" },
+        { "name": "constant.numeric.octal.pager", "match": "\\b0[0-7]+\\b" },
+        { "name": "constant.numeric.decimal.pager", "match": "\\b[0-9]+\\b" }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.shell.pager",
+          "match": "\\b(if|then|else|elif|fi|for|in|do|done|while|until|case|esac|function|select|trap|return|exit|break|continue|shift|eval|exec|source)\\b"
+        },
+        {
+          "name": "keyword.operator.logical.pager",
+          "match": "\\b(&&|\\|\\||!|\\-a|\\-o)\\b"
+        },
+        {
+          "name": "keyword.operator.test.pager",
+          "match": "\\s(\\-eq|\\-ne|\\-gt|\\-lt|\\-ge|\\-le|\\-z|\\-n|\\-f|\\-d|\\-e|\\-r|\\-w|\\-x|\\-s)\\s"
+        }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        {
+          "name": "support.function.builtin.pager",
+          "match": "\\b(echo|printf|cat|grep|sed|awk|cut|sort|uniq|wc|head|tail|tr|xargs|find|ls|rm|cp|mv|mkdir|chmod|chown|date|sleep|kill|ps|dd|sync|mount|umount|ip|ifconfig|ping|wget|curl)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        { "name": "keyword.operator.pipe.pager", "match": "\\|" },
+        { "name": "keyword.operator.redirect.pager", "match": "[<>]|>>|2>&1|&>" },
+        { "name": "keyword.operator.assignment.pager", "match": "=" }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "entity.name.function.pager",
+          "match": "^\\s*([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\(\\)",
+          "captures": { "1": { "name": "entity.name.function.definition.pager" } }
+        }
+      ]
+    }
+  }
+}

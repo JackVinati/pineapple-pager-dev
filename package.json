@@ -1,0 +1,146 @@
+{
+  "name": "pineapple-pager-dev",
+  "displayName": "Pineapple Pager Dev",
+  "description": "Develop, deploy, run and debug WiFi Pineapple Pager payloads directly from VS Code.",
+  "version": "1.2.0",
+  "publisher": "pager-community",
+  "license": "MIT",
+  "icon": "resources/icon.png",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Programming Languages", "Debuggers", "Other"],
+  "keywords": ["hak5", "pineapple", "pager", "duckyscript", "payload", "pentest"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "pager.connect", "title": "Pager: Connect to Device", "icon": "$(plug)" },
+      { "command": "pager.disconnect", "title": "Pager: Disconnect", "icon": "$(debug-disconnect)" },
+      { "command": "pager.deploy", "title": "Pager: Deploy Payload", "icon": "$(cloud-upload)" },
+      { "command": "pager.deployAndRun", "title": "Pager: Deploy & Run (always)", "icon": "$(run-all)" },
+      { "command": "pager.smartDeployAndRun", "title": "Pager: Smart Deploy & Run", "icon": "$(play)" },
+      { "command": "pager.runOnDevice", "title": "Pager: Run on Device (no deploy)", "icon": "$(play-circle)" },
+      { "command": "pager.runRemote", "title": "Run", "icon": "$(play)" },
+      { "command": "pager.deployFolder", "title": "Pager: Deploy Payload Folder", "icon": "$(folder-opened)" },
+      { "command": "pager.stop", "title": "Pager: Stop Payload", "icon": "$(debug-stop)" },
+      { "command": "pager.newPayload", "title": "Pager: New Payload from Template", "icon": "$(new-file)" },
+      { "command": "pager.openTerminal", "title": "Pager: Open SSH Terminal", "icon": "$(terminal)" },
+      { "command": "pager.streamLogs", "title": "Pager: Stream Device Logs", "icon": "$(output)" },
+      { "command": "pager.editPayloadConfig", "title": "Pager: Edit Payload Config", "icon": "$(gear)" },
+      { "command": "pager.fixLineEndings", "title": "Pager: Fix Line Endings (LF)", "icon": "$(find-replace)" },
+      { "command": "pager.validatePayload", "title": "Pager: Validate Payload", "icon": "$(check)" },
+      { "command": "pager.refreshDevice", "title": "Refresh", "icon": "$(refresh)" },
+      { "command": "pager.refreshPayloads", "title": "Refresh", "icon": "$(refresh)" },
+      { "command": "pager.refreshLoot", "title": "Refresh", "icon": "$(refresh)" },
+      { "command": "pager.deletePayload", "title": "Delete from Device", "icon": "$(trash)" },
+      { "command": "pager.renamePayload", "title": "Rename", "icon": "$(edit)" },
+      { "command": "pager.pullPayload", "title": "Download to Local", "icon": "$(cloud-download)" },
+      { "command": "pager.previewRemotePayload", "title": "View Source", "icon": "$(eye)" },
+      { "command": "pager.downloadLoot", "title": "Download", "icon": "$(cloud-download)" },
+      { "command": "pager.deleteLoot", "title": "Delete", "icon": "$(trash)" },
+      { "command": "pager.previewLoot", "title": "Preview", "icon": "$(eye)" }
+    ],
+    "keybindings": [
+      { "command": "pager.smartDeployAndRun", "key": "ctrl+shift+r", "mac": "cmd+shift+r", "when": "resourceExtname == .sh" },
+      { "command": "pager.deploy", "key": "ctrl+shift+d", "mac": "cmd+shift+d", "when": "resourceExtname == .sh" },
+      { "command": "pager.stop", "key": "ctrl+shift+s", "mac": "cmd+shift+s", "when": "pager.payloadRunning" },
+      { "command": "pager.streamLogs", "key": "ctrl+shift+l", "mac": "cmd+shift+l" }
+    ],
+    "menus": {
+      "editor/title": [
+        { "command": "pager.smartDeployAndRun", "group": "navigation@1", "when": "resourceExtname == .sh && !pager.payloadRunning" },
+        { "command": "pager.stop", "group": "navigation@1", "when": "pager.payloadRunning" },
+        { "command": "pager.deployAndRun", "group": "navigation@2", "when": "resourceExtname == .sh" },
+        { "command": "pager.runOnDevice", "group": "navigation@3", "when": "resourceExtname == .sh" },
+        { "command": "pager.deploy", "group": "navigation@4", "when": "resourceExtname == .sh" },
+        { "command": "pager.deployFolder", "group": "navigation@5", "when": "resourceExtname == .sh" }
+      ],
+      "editor/context": [
+        { "command": "pager.smartDeployAndRun", "group": "pager@1", "when": "resourceExtname == .sh" },
+        { "command": "pager.deployAndRun", "group": "pager@2", "when": "resourceExtname == .sh" },
+        { "command": "pager.runOnDevice", "group": "pager@3", "when": "resourceExtname == .sh" },
+        { "command": "pager.deploy", "group": "pager@4", "when": "resourceExtname == .sh" },
+        { "command": "pager.deployFolder", "group": "pager@5", "when": "resourceExtname == .sh" }
+      ],
+      "view/title": [
+        { "command": "pager.refreshDevice", "when": "view == pagerDeviceInfo", "group": "navigation" },
+        { "command": "pager.refreshPayloads", "when": "view == pagerPayloads", "group": "navigation" },
+        { "command": "pager.refreshLoot", "when": "view == pagerLootExplorer", "group": "navigation" }
+      ],
+      "view/item/context": [
+        { "command": "pager.runRemote", "when": "view == pagerPayloads && viewItem == payloadFile", "group": "inline@1" },
+        { "command": "pager.runRemote", "when": "view == pagerPayloads && viewItem == payloadFile", "group": "payload@1" },
+        { "command": "pager.previewRemotePayload", "when": "view == pagerPayloads && viewItem == payloadFile", "group": "payload@2" },
+        { "command": "pager.pullPayload", "when": "view == pagerPayloads && viewItem == payloadFile", "group": "payload@3" },
+        { "command": "pager.deletePayload", "when": "view == pagerPayloads && viewItem == payloadFile", "group": "payload@9" },
+        { "command": "pager.renamePayload", "when": "view == pagerPayloads && viewItem == payloadDir", "group": "inline@2" },
+        { "command": "pager.deletePayload", "when": "view == pagerPayloads && viewItem == payloadDir", "group": "inline@3" },
+        { "command": "pager.runRemote", "when": "view == pagerPayloads && viewItem == payloadDir", "group": "payload@1" },
+        { "command": "pager.previewRemotePayload", "when": "view == pagerPayloads && viewItem == payloadDir", "group": "payload@2" },
+        { "command": "pager.pullPayload", "when": "view == pagerPayloads && viewItem == payloadDir", "group": "payload@3" },
+        { "command": "pager.renamePayload", "when": "view == pagerPayloads && viewItem == payloadDir", "group": "payloadEdit@1" },
+        { "command": "pager.deletePayload", "when": "view == pagerPayloads && viewItem == payloadDir", "group": "payloadEdit@2" },
+        { "command": "pager.deletePayload", "when": "view == pagerPayloads && viewItem == payloadCategory", "group": "inline@3" },
+        { "command": "pager.renamePayload", "when": "view == pagerPayloads && viewItem == payloadCategory", "group": "payloadEdit@1" },
+        { "command": "pager.deletePayload", "when": "view == pagerPayloads && viewItem == payloadCategory", "group": "payloadEdit@2" },
+        { "command": "pager.downloadLoot", "when": "view == pagerLootExplorer && viewItem == lootFile", "group": "inline" },
+        { "command": "pager.previewLoot", "when": "view == pagerLootExplorer && viewItem == lootFile", "group": "loot@1" },
+        { "command": "pager.downloadLoot", "when": "view == pagerLootExplorer && viewItem == lootFile", "group": "loot@2" },
+        { "command": "pager.deleteLoot", "when": "view == pagerLootExplorer && viewItem == lootFile", "group": "loot@3" },
+        { "command": "pager.deleteLoot", "when": "view == pagerLootExplorer && viewItem == lootFolder", "group": "loot@3" }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [{ "id": "pager-explorer", "title": "Pineapple Pager", "icon": "resources/pager-icon.svg" }]
+    },
+    "views": {
+      "pager-explorer": [
+        { "id": "pagerDeviceInfo", "name": "Device" },
+        { "id": "pagerPayloads", "name": "Payloads on Device" },
+        { "id": "pagerLootExplorer", "name": "Loot" }
+      ]
+    },
+    "viewsWelcome": [
+      { "view": "pagerDeviceInfo", "contents": "Not connected to Pineapple Pager.\n[Connect to Pager](command:pager.connect)" },
+      { "view": "pagerPayloads", "contents": "Connect to browse payloads.\n[Connect to Pager](command:pager.connect)" },
+      { "view": "pagerLootExplorer", "contents": "Connect to browse loot.\n[Connect to Pager](command:pager.connect)" }
+    ],
+    "configuration": {
+      "title": "Pineapple Pager Dev",
+      "properties": {
+        "pagerDev.host": { "type": "string", "default": "172.16.52.1", "description": "Pager IP address" },
+        "pagerDev.port": { "type": "number", "default": 22, "description": "SSH port" },
+        "pagerDev.username": { "type": "string", "default": "root", "description": "SSH username" },
+        "pagerDev.password": { "type": "string", "default": "", "description": "SSH password (blank to prompt)" },
+        "pagerDev.privateKeyPath": { "type": "string", "default": "", "description": "Path to SSH private key" },
+        "pagerDev.autoDeployOnSave": { "type": "boolean", "default": false, "description": "Auto deploy on save" },
+        "pagerDev.autoFixLineEndings": { "type": "boolean", "default": true, "description": "Auto CRLF→LF" },
+        "pagerDev.autoReconnect": { "type": "boolean", "default": true, "description": "Auto-reconnect on unexpected disconnect" },
+        "pagerDev.defaultCategory": { "type": "string", "default": "general", "enum": ["general","reconnaissance","exfiltration","interception","remote_access","games","prank"] },
+        "pagerDev.payloadBasePath": { "type": "string", "default": "/root/payloads/user", "description": "Payload root on Pager" },
+        "pagerDev.lootPath": { "type": "string", "default": "/root/loot", "description": "Loot directory on Pager" },
+        "pagerDev.showOutputOnRun": { "type": "boolean", "default": true, "description": "Auto-show output on run" },
+        "pagerDev.connectionTimeout": { "type": "number", "default": 30, "description": "SSH connection/handshake timeout (s). Dropbear on the Pager can be slow to handshake." },
+        "pagerDev.deployTimeout": { "type": "number", "default": 10, "description": "Deploy timeout (s)" },
+        "pagerDev.runTimeout": { "type": "number", "default": 300, "description": "Max runtime (s), 0=unlimited" }
+      }
+    },
+    "languages": [{ "id": "pager-payload", "aliases": ["Pager Payload"], "filenames": ["payload.sh"], "configuration": "./language-configuration.json" }],
+    "grammars": [{ "language": "pager-payload", "scopeName": "source.pager-payload", "path": "./syntaxes/pager-payload.tmLanguage.json" }],
+    "snippets": [
+      { "language": "pager-payload", "path": "./snippets/pager-snippets.json" },
+      { "language": "shellscript", "path": "./snippets/pager-snippets.json" }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "dependencies": { "ssh2": "^1.15.0" },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/ssh2": "^1.15.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0"
+  }
+}
