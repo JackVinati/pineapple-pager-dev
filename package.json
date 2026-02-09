@@ -3,7 +3,7 @@
   "displayName": "Pineapple Pager Dev",
   "description": "Develop, deploy, run and debug WiFi Pineapple Pager payloads directly from VS Code.",
   "version": "1.2.0",
-  "publisher": "pager-community",
+  "publisher": "JackVin",
   "license": "MIT",
   "icon": "resources/icon.png",
   "engines": { "vscode": "^1.85.0" },
